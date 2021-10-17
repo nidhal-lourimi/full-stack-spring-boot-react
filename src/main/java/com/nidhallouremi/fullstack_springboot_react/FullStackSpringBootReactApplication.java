@@ -1,4 +1,4 @@
-package com.nidhalkouremi.fullstack_springboot_react;
+package com.nidhallouremi.fullstack_springboot_react;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
