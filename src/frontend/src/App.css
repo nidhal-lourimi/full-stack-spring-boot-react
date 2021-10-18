@@ -35,8 +35,6 @@
   to {
     transform: rotate(360deg);
   }
-
-
 }
 #components-layout-demo-side .logo {
   height: 32px;
@@ -46,4 +44,13 @@
 
 .site-layout .site-layout-background {
   background: #fff;
+}
+.load
+{
+/*  margin: 20px 0;
+  margin-bottom: 20px;*/
+  padding: 30px 50px;
+  text-align: center;
+ /* background: rgba(0, 0, 0, 0.05);*/
+  border-radius: 8px;
 }
