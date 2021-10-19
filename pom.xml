@@ -45,7 +45,9 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+
                 <configuration>
+
                     <excludes>
                         <exclude>
                             <groupId>org.projectlombok</groupId>
@@ -54,7 +56,96 @@
                     </excludes>
                 </configuration>
             </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <configuration>
+                        <source>1.8</source>
+                        <target>1.8</target>
+                    </configuration>
+                </plugin>
         </plugins>
     </build>
+    <profiles>
+        <profile>
+            <id>build-frontend</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
 
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.github.eirslett</groupId>
+                        <artifactId>frontend-maven-plugin</artifactId>
+                        <!-- Use the latest released version:
+                                  https://repo1.maven.org/maven2/com/github/eirslett/frontend-maven-plugin/ -->
+                        <version>1.9.0</version>
+
+                        <configuration>
+                            <nodeVersion>v12.16.1</nodeVersion>
+                            <workingDirectory>src/frontend</workingDirectory>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>install node and npm</id>
+                                <goals>
+                                    <goal>install-node-and-npm</goal>
+                                </goals>
+                                <configuration>
+                                <!--    <nodeVersion>v16.11.1</nodeVersion>
+                                    <npmVersion>8.0.0</npmVersion>-->
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>npm install</id>
+                                <goals>
+                                    <goal>npm</goal>
+                                </goals>
+                                <configuration>
+                                    <arguments>install</arguments>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>npm run build</id>
+                                <goals>
+                                    <goal>npm</goal>
+                                </goals>
+                                <configuration>
+                                    <arguments>run build</arguments>
+                                    <installDirectory>./src/frontend</installDirectory>
+                                </configuration>
+                            </execution>
+                        </executions>
+
+                    </plugin>
+                    <plugin>
+
+                        <artifactId>maven-resources-plugin</artifactId>
+                        <executions>
+                                <execution>
+                                    <id>copy-build-past</id>
+                                    <phase>process-classes</phase>
+                                    <goals>
+                                        <goal> copy-resources</goal>
+                                    </goals>
+                                    <configuration>
+                                        <resources>
+                                            <resource>
+                                                <directory>src/frontend/build</directory>
+                                            </resource>
+
+                                        </resources>
+                                        <outputDirectory>${basedir}/target/classes/static</outputDirectory>
+                                    </configuration>
+                                </execution>
+                        </executions>
+                    </plugin>
+
+                </plugins>
+            </build>
+
+        </profile>
+    </profiles>
 </project>
