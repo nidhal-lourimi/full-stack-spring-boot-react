@@ -15,6 +15,8 @@
     <description>FullStack_SpringBoot_React</description>
     <properties>
         <java.version>17</java.version>
+        <app.image.name>spring-boot-fullstack</app.image.name>
+        <app.image.tag/>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -63,8 +65,12 @@
                 <!-- mvn jib:dockerBuild -Dimage=fullstack:v1-->
                 <groupId>com.google.cloud.tools</groupId>
                 <artifactId>jib-maven-plugin</artifactId>
-                    <version>3.1.4</version>
+                <version>2.5.0</version>
                 <configuration>
+                    <to>
+                        <!-- maven plugin to create and push img to docker hub cmd:  mvn clean install jib:build -->
+                        <image>nidhallourimi/fullstack:v1</image>
+                    </to>
                     <from>
                         <image>openjdk:17</image>
                     </from>
@@ -76,14 +82,7 @@
                     </container>
                 </configuration>
             </plugin>
-                <!--<plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <configuration>
-                        <source>1.8</source>
-                        <target>1.8</target>
-                    </configuration>
-                </plugin>-->
+
         </plugins>
     </build>
     <profiles>
@@ -113,8 +112,8 @@
                                     <goal>install-node-and-npm</goal>
                                 </goals>
                                 <configuration>
-                                <!--    <nodeVersion>v16.11.1</nodeVersion>
-                                    <npmVersion>8.0.0</npmVersion>-->
+                                    <!--    <nodeVersion>v16.11.1</nodeVersion>
+                                        <npmVersion>8.0.0</npmVersion>-->
                                 </configuration>
                             </execution>
                             <execution>
@@ -143,28 +142,137 @@
 
                         <artifactId>maven-resources-plugin</artifactId>
                         <executions>
-                                <execution>
-                                    <id>copy-build-past</id>
-                                    <phase>process-classes</phase>
-                                    <goals>
-                                        <goal> copy-resources</goal>
-                                    </goals>
-                                    <configuration>
-                                        <resources>
-                                            <resource>
-                                                <directory>src/frontend/build</directory>
-                                            </resource>
+                            <execution>
+                                <id>copy-build-past</id>
+                                <phase>process-classes</phase>
+                                <goals>
+                                    <goal>copy-resources</goal>
+                                </goals>
+                                <configuration>
+                                    <resources>
+                                        <resource>
+                                            <directory>src/frontend/build</directory>
+                                        </resource>
 
-                                        </resources>
-                                        <outputDirectory>${basedir}/target/classes/static</outputDirectory>
-                                    </configuration>
-                                </execution>
+                                    </resources>
+                                    <outputDirectory>${basedir}/target/classes/static</outputDirectory>
+                                </configuration>
+                            </execution>
                         </executions>
                     </plugin>
 
                 </plugins>
             </build>
 
+        </profile>
+        <profile>
+
+        <!--mvn clean install -P build-frontend -P jib-push-to-docker -D app.image.tag=1
+-->
+            <id>jib-push-to-docker</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+
+                        <groupId>com.google.cloud.tools</groupId>
+                        <artifactId>jib-maven-plugin</artifactId>
+                        <version>2.5.0</version>
+                        <configuration>
+                            <from>
+                                <image>openjdk:17</image>
+                            </from>
+                            <container>
+                                <ports>
+                                    <port>8080</port>
+                                </ports>
+                                <format>OCI</format>
+                            </container>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>push-to-docker-hub-custom-tag</id>
+                                <configuration>
+                                    <to>
+                                        <image>nidhallourimi/${app.image.name}:${app.image.tag}</image>
+                                    </to>
+                                </configuration>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>build</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>push-to-docker-hub-latest-tag</id>
+                                <configuration>
+                                    <to>
+                                        <image>nidhallourimi/${app.image.name}:latest</image>
+                                    </to>
+                                </configuration>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>build</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>jib-push-to-local</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+
+                        <groupId>com.google.cloud.tools</groupId>
+                        <artifactId>jib-maven-plugin</artifactId>
+                        <version>2.5.0</version>
+                        <configuration>
+                            <from>
+                                <image>openjdk:17</image>
+                            </from>
+                            <container>
+                                <ports>
+                                    <port>8080</port>
+                                </ports>
+                                <format>OCI</format>
+                            </container>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>push-to-local-custom-tag</id>
+                                <configuration>
+                                    <to>
+                                        <image>nidhallourimi/${app.image.name}:${app.image.tag}</image>
+                                    </to>
+                                </configuration>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>dockerBuild</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>push-to-local-latest-tag</id>
+                                <configuration>
+                                    <to>
+                                        <image>nidhallourimi/${app.image.name}:latest</image>
+                                    </to>
+                                </configuration>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>dockerBuild</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
         </profile>
     </profiles>
 </project>
