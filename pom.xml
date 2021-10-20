@@ -69,7 +69,7 @@
                 <configuration>
                     <to>
                         <!-- maven plugin to create and push img to docker hub cmd:  mvn clean install jib:build -->
-                        <image>nidhallourimi/fullstack:v1</image>
+                        <image>nidhallourimi/${app.image.tag}:latest</image>
                     </to>
                     <from>
                         <image>openjdk:17</image>

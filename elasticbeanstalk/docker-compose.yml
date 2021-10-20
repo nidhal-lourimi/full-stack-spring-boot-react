@@ -1,0 +1,7 @@
+version: "20.10.8"
+services:
+  backend:
+    image: "nidhallourimi/spring-boot-fullstack:latest"
+    ports:
+      - "80:8080"
+    restart: "always"
