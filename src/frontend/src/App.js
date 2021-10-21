@@ -77,7 +77,7 @@ function App() {
                       bordered
                       title={() => 'Students'}
                       pagination={{pageSize: 50}}
-                      scroll={{y: 240}}
+                      scroll={{y: 450}}
                       rowKey={(student)=> student.id}
         />;
 
@@ -113,7 +113,7 @@ function App() {
                     <Breadcrumb.Item>User</Breadcrumb.Item>
                     <Breadcrumb.Item>Bill</Breadcrumb.Item>
                 </Breadcrumb>
-                <div className="site-layout-background" style={{padding: 24, minHeight: 360}}>
+                <div className="site-layout-background" style={{padding: 24, minHeight: 500}}>
                     {renderStudents()}
                 </div>
             </Content>
