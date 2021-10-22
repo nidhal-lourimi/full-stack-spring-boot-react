@@ -1,18 +1,20 @@
 //import {Button,Radio} from "antd";
 import {useState, useEffect} from "react";
 import {getAllStudents} from "./client";
-import {Layout, Menu, Breadcrumb, Table, Spin, Empty} from 'antd';
+import {Layout, Menu, Breadcrumb, Table, Spin, Empty,Button} from 'antd';
 import {
     DesktopOutlined,
     PieChartOutlined,
     FileOutlined,
     TeamOutlined,
     UserOutlined,
-    LoadingOutlined
+    LoadingOutlined,  PlusCircleOutlined
 } from '@ant-design/icons';
 
+import StudentDrawerForm from "./StudentDrawerForm";
 
 import './App.css';
+import Avatar from "antd/es/avatar/avatar";
 
 const antIcon = <LoadingOutlined style={{fontSize: 40}} spin/>;
 const {Header, Content, Footer, Sider} = Layout;
@@ -44,7 +46,7 @@ const columns = [
         key: 'operation',
         fixed: 'right',
         width: 100,
-        render: () => <a href="null">action</a>,
+        render: () => <a href="id">action</a>,
     }
 
 ];
@@ -53,6 +55,7 @@ function App() {
     const [students, setStudents] = useState([]);
     const [collapsed, setCollapsed] = useState(false);
     const [fetching, setFetching] = useState(true)
+    const [showDrawer, setShowDrawer] = useState(false);
     const fetchStudents = () => getAllStudents()
         .then(res => res.json())
         .then(data => {
@@ -70,17 +73,29 @@ function App() {
             return <div className="load"><Spin indicator={antIcon}/></div>
         }
         if (students.length <= 0) {
-            return <Empty/>
+            return <Empty/>;
         }
-        return <Table dataSource={students}
-                      columns={columns}
-                      bordered
-                      title={() => 'Students'}
+        return <>
+            <StudentDrawerForm
+                showDrawer={showDrawer}
+                setShowDrawer={setShowDrawer}
+                fetchStudents={fetchStudents}
+            />
+            <Table
+                dataSource={students}
+                columns={columns}
+                bordered
+                title={() =>
+                    <Button
+                        onClick={() => setShowDrawer(!showDrawer)}
+                        type="primary" shape="round" icon={<PlusCircleOutlined/>} size="small">
+                        Add New Student
+                    </Button>}
                       pagination={{pageSize: 50}}
-                      scroll={{y: 450}}
+                      scroll={{y: 300}}
                       rowKey={(student)=> student.id}
         />;
-
+    </>
     }
     return <Layout style={{minHeight: '100vh'}}>
         <Sider collapsible collapsed={collapsed} onCollapse={setCollapsed}>
@@ -108,12 +123,12 @@ function App() {
         </Sider>
         <Layout className="site-layout">
             <Header className="site-layout-background" style={{padding: 0}}/>
-            <Content style={{margin: '0 16px'}}>
-                <Breadcrumb style={{margin: '16px 0'}}>
-                    <Breadcrumb.Item>User</Breadcrumb.Item>
+            <Content>
+                <Breadcrumb style={{margin: '16px 16px'}}>
+                    <Breadcrumb.Item><Avatar size="large" icon={<UserOutlined />} /></Breadcrumb.Item>
                     <Breadcrumb.Item>Bill</Breadcrumb.Item>
                 </Breadcrumb>
-                <div className="site-layout-background" style={{padding: 24, minHeight: 500}}>
+                <div className="site-layout-background" style={{padding: 24, minHeight: 10}}>
                     {renderStudents()}
                 </div>
             </Content>
