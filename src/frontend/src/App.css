@@ -54,3 +54,17 @@
  /* background: rgba(0, 0, 0, 0.05);*/
   border-radius: 8px;
 }
+.site-badge .ant-badge-count {
+  margin-right: 5px;
+  color: #999;
+  background-color: #fff;
+  box-shadow: 0 0 0 1px #d9d9d9 inset;
+  float: right;
+  position: center;
+
+
+}
+.btn {
+
+  position: absolute;
+}

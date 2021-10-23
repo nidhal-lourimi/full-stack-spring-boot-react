@@ -2,26 +2,23 @@ import {Drawer, Input, Col, Select, Form, Row, Button, notification, Spin} from 
 import {addNewStudent} from "./client";
 import {LoadingOutlined, SmileOutlined} from "@ant-design/icons";
 import {useState} from "react";
+import {successNotification,errorNotification} from "./notification";
 
 const {Option} = Select;
 const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
 function StudentDrawerForm({showDrawer, setShowDrawer,fetchStudents}) {
     const onCLose = () => setShowDrawer(false);
-    const  [submiting,setsunbmiting] =useState(false)
+    const  [submitting,setSubmitting] =useState(false)
     const onFinish = values => {
-        setsunbmiting(true)
+        setSubmitting(true)
         console.log(JSON.stringify(values, null, 2));
         onCLose();
         fetchStudents();
         addNewStudent(values).then(()=>{
-            notification.open({
-                message: 'student added',
-                description:
-                    'This is the content of the notification. This is the content of the notification.' +
-                    ' This is the content of the notification.',
-                icon: <SmileOutlined style={{ color: '#108ee9' }} />,})
-            console.log("student added")
-            setsunbmiting(false)
+            successNotification("Student successfully added",`${values.name} is added` );
+            console.log("student added");
+            setSubmitting(false);
+            fetchStudents();
 
         })
     };
@@ -97,7 +94,7 @@ function StudentDrawerForm({showDrawer, setShowDrawer,fetchStudents}) {
                 </Col>
             </Row>
             <Row>
-                {submiting  && <Spin indicator={antIcon} />}
+                {submitting  && <Spin indicator={antIcon} />}
             </Row>
         </Form>
     </Drawer>
