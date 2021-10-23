@@ -1,7 +1,7 @@
 //import {Button,Radio} from "antd";
 import {useState, useEffect} from "react";
-import {getAllStudents} from "./client";
-import {Layout, Menu, Breadcrumb, Table, Spin, Empty, Button, Badge, Tag} from 'antd';
+import {deleteStudent, getAllStudents} from "./client";
+import {Layout, Menu, Breadcrumb, Table, Spin, Empty, Button, Badge, Tag, Popconfirm,message} from 'antd';
 import {
     DesktopOutlined,
     PieChartOutlined,
@@ -19,7 +19,7 @@ import Avatar from "antd/es/avatar/avatar";
 const antIcon = <LoadingOutlined style={{fontSize: 40}} spin/>;
 const {Header, Content, Footer, Sider} = Layout;
 const {SubMenu} = Menu;
-
+function App() {
 const columns = [
     {
         title: 'Id',
@@ -46,12 +46,30 @@ const columns = [
         key: 'operation',
         fixed: 'right',
         width: 100,
-        render: () => <a href="id">action</a>,
+        render: (students) => <Popconfirm
+            title="Are you sure to delete this task?"
+            onConfirm={()=>confirm(students)}
+            onCancel={cancel}
+            okText="Yes"
+            cancelText="No"
+        > <Button onClick ={()=> {console.log(students.name)}} >delete</Button> </Popconfirm>
     }
 
 ];
 
-function App() {
+
+    function confirm( students) {
+        console.log(students.id);
+        message.success(`${students.name} deleted`);
+      deleteStudent(students.id);
+       fetchStudents();
+    }
+function cancel(e) {
+    console.log(e);
+    message.error('deleting canceled');
+}
+
+
     const [students, setStudents] = useState([]);
     const [collapsed, setCollapsed] = useState(false);
     const [fetching, setFetching] = useState(true)
@@ -59,7 +77,7 @@ function App() {
     const fetchStudents = () => getAllStudents()
         .then(res => res.json())
         .then(data => {
-            console.log(data);
+           /* console.log(data);*/
             setStudents(data);
             setFetching(false)
         })

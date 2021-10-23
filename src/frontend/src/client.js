@@ -11,8 +11,8 @@ const checkStatus = response => {
 }
 
 export const getAllStudents = () =>
-    fetch("api/v1/students")
-        .then(checkStatus);
+    fetch("api/v1/students").then(checkStatus);
+
 
 
 export const addNewStudent = student =>
@@ -21,3 +21,7 @@ export const addNewStudent = student =>
                  method:'POST',
                 body:JSON.stringify(student)
     });
+
+export const deleteStudent = (studentsId) =>fetch(`api/v1/students/${studentsId}`,
+    {method:'DELETE'}).then(checkStatus);
+
