@@ -17,6 +17,7 @@ import './App.css';
 import Avatar from "antd/es/avatar/avatar";
 import {errorUI} from "./errorHandelingUI";
 import Modal from "antd/es/modal/Modal";
+import {errorNotification} from "./notification";
 
 const antIcon = <LoadingOutlined style={{fontSize: 40}} spin/>;
 const {Header, Content, Footer, Sider} = Layout;
@@ -67,9 +68,12 @@ function App() {
 
     function confirm( students) {
         console.log(students.id);
-        message.success(`${students.name} deleted`).then(deleteStudent(students.id),fetchStudents());
+        deleteStudent(students.id).then(()=>{
+        message.success(`${students.name} deleted`).then(fetchStudents());
       /*deleteStudent(students.id);*/
-       fetchStudents();
+       fetchStudents();}).catch(err => {console.log(err);
+            err.response.json().then(res =>
+                errorNotification("there was an issue",`${res.message}[${res.status}][${res.error}] `,"bottomLeft"))})
     }
 function cancel(e) {
     console.log(e);

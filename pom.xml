@@ -14,7 +14,7 @@
     <name>FullStack_SpringBoot_React</name>
     <description>FullStack_SpringBoot_React</description>
     <properties>
-        <java.version>17</java.version>
+        <java.version>17.0.1</java.version>
         <app.image.name>spring-boot-fullstack</app.image.name>
         <app.image.tag/>
         <maven.compiler.source>1.8</maven.compiler.source>
