@@ -60,9 +60,8 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-
+                <version>2.5.5</version>
                 <configuration>
-
                     <excludes>
                         <exclude>
                             <groupId>org.projectlombok</groupId>
@@ -149,8 +148,10 @@
 
                     </plugin>
                     <plugin>
-
+                        <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-resources-plugin</artifactId>
+                        <version>3.2.0</version>
+
                         <executions>
                             <execution>
                                 <id>copy-build-past</id>
@@ -177,8 +178,8 @@
         </profile>
         <profile>
 
-        <!--mvn clean install -P build-frontend -P jib-push-to-docker -D app.image.tag=1
--->
+            <!--mvn clean install -P build-frontend -P jib-push-to-docker -D app.image.tag=1
+    -->
             <id>jib-push-to-docker</id>
             <activation>
                 <activeByDefault>false</activeByDefault>

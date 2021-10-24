@@ -15,12 +15,17 @@ import StudentDrawerForm from "./StudentDrawerForm";
 
 import './App.css';
 import Avatar from "antd/es/avatar/avatar";
+import {errorUI} from "./errorHandelingUI";
 
 const antIcon = <LoadingOutlined style={{fontSize: 40}} spin/>;
 const {Header, Content, Footer, Sider} = Layout;
 const {SubMenu} = Menu;
+
+
 function App() {
-const columns = [
+    /*let respond ;*/
+
+    const columns = [
     {
         title: 'Id',
         dataIndex: 'id',
@@ -66,7 +71,7 @@ const columns = [
     }
 function cancel(e) {
     console.log(e);
-    message.error('deleting canceled');
+    message.error('deleting cancelled');
 }
 
 
@@ -79,8 +84,14 @@ function cancel(e) {
         .then(data => {
            /* console.log(data);*/
             setStudents(data);
-            setFetching(false)
-        })
+            setFetching(false);
+        }).catch(err => {
+            console.log(err.response.status);
+            let m =(err.response.status).toString();
+           window.respond=m;
+           return     setFetching(false);
+
+        } );
     useEffect(() => {
         console.log("component is mounted");
         fetchStudents();
@@ -90,8 +101,15 @@ function cancel(e) {
         if (fetching) {
             return <div className="load"><Spin indicator={antIcon}/></div>
         }
-        if (students.length <= 0) {
-            return <Empty/>;
+        if (students.length <= 0 && fetching===true ) {
+
+            return <Empty/> ;
+
+        }
+      if (!(fetching))
+        {
+
+           return  errorUI(window.respond);
         }
         return <>
             <StudentDrawerForm
