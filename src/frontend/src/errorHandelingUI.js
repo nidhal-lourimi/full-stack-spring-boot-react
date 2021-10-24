@@ -2,7 +2,7 @@ import { Result, Button } from 'antd';
 
 
 export const errorUI = (msg) => {
-
+    console.log( `this is working ${msg}`)
     return <>
         <Result
             status={msg}
@@ -10,7 +10,7 @@ export const errorUI = (msg) => {
             subTitle="Sorry, something went wrong."
         />
     </>
-   /* console.log( `this is working ${msg}`)*/
+
 }
 
 

@@ -1,7 +1,7 @@
 //import {Button,Radio} from "antd";
 import {useState, useEffect} from "react";
 import {deleteStudent, getAllStudents} from "./client";
-import {Layout, Menu, Breadcrumb, Table, Spin, Empty, Button, Badge, Tag, Popconfirm,message} from 'antd';
+import {Layout, Menu, Breadcrumb, Table, Spin, Empty, Button, Badge, Tag, Popconfirm,message,Result,} from 'antd';
 import {
     DesktopOutlined,
     PieChartOutlined,
@@ -16,6 +16,7 @@ import StudentDrawerForm from "./StudentDrawerForm";
 import './App.css';
 import Avatar from "antd/es/avatar/avatar";
 import {errorUI} from "./errorHandelingUI";
+import Modal from "antd/es/modal/Modal";
 
 const antIcon = <LoadingOutlined style={{fontSize: 40}} spin/>;
 const {Header, Content, Footer, Sider} = Layout;
@@ -23,7 +24,8 @@ const {SubMenu} = Menu;
 
 
 function App() {
-    /*let respond ;*/
+
+ window.responde="200";
 
     const columns = [
     {
@@ -65,8 +67,8 @@ function App() {
 
     function confirm( students) {
         console.log(students.id);
-        message.success(`${students.name} deleted`);
-      deleteStudent(students.id);
+        message.success(`${students.name} deleted`).then(deleteStudent(students.id),fetchStudents());
+      /*deleteStudent(students.id);*/
        fetchStudents();
     }
 function cancel(e) {
@@ -79,38 +81,52 @@ function cancel(e) {
     const [collapsed, setCollapsed] = useState(false);
     const [fetching, setFetching] = useState(true)
     const [showDrawer, setShowDrawer] = useState(false);
+
+    useEffect(() => {
+        console.log("component is mounted");
+        fetchStudents();
+    }, []);
+
     const fetchStudents = () => getAllStudents()
         .then(res => res.json())
         .then(data => {
            /* console.log(data);*/
             setStudents(data);
             setFetching(false);
+
         }).catch(err => {
             console.log(err.response.status);
             let m =(err.response.status).toString();
-           window.respond=m;
-           return     setFetching(false);
-
+            /*setFetching(false);*/
+             window.responde=m;
+            console.log(`error ${window.responde}`);
+            renderStudents();
         } );
-    useEffect(() => {
-        console.log("component is mounted");
-        fetchStudents();
-    }, []);
+
 
     const renderStudents = () => {
-        if (fetching) {
-            return <div className="load"><Spin indicator={antIcon}/></div>
-        }
-        if (students.length <= 0 && fetching===true ) {
+        console.log(`error 2  ${window.responde}`);
+        if (fetching && (window.responde==="200"))
+        {
+            console.log(window.responde);
+          return(  <div className="load"><Spin indicator={antIcon}/></div>);
+        };
+        if ((window.responde==="500")){
+        Modal.error ({
+            title: 'Fatal Error ',
+            content: (errorUI(window.responde)),
+        });
+
+        };
+
+        if (students.length <= 0 && fetching===true && window.responde==="200"  ) {
 
             return <Empty/> ;
 
-        }
-      if (!(fetching))
-        {
+        };
 
-           return  errorUI(window.respond);
-        }
+
+
         return <>
             <StudentDrawerForm
                 showDrawer={showDrawer}
@@ -182,6 +198,8 @@ function cancel(e) {
             <Footer style={{textAlign: 'center'}}>billcom ©2021 Created by NidhalLourimi</Footer>
         </Layout>
     </Layout>
+
+
 }
 
 export default App;
