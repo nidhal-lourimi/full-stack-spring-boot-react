@@ -26,7 +26,8 @@ function StudentDrawerForm({showDrawer, setShowDrawer,fetchStudents}) {
     };
 
     const onFinishFailed = errorInfo => {
-        alert(JSON.stringify(errorInfo, null, 2));
+        errorNotification(errorInfo,"check your input","topRight")
+       /* alert(JSON.stringify(errorInfo, null, 2));*/
     };
 
     return <Drawer
