@@ -17,8 +17,8 @@
         <java.version>16.0.1</java.version>
         <app.image.name>spring-boot-fullstack</app.image.name>
         <app.image.tag/>
-      <maven.compiler.source>3.1.0</maven.compiler.source>
-        <maven.compiler.target>3.1.0</maven.compiler.target>
+      <maven.compiler.source>3.2.0</maven.compiler.source>
+        <maven.compiler.target>3.2.0</maven.compiler.target>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
