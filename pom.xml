@@ -14,7 +14,7 @@
     <name>FullStack_SpringBoot_React</name>
     <description>FullStack_SpringBoot_React</description>
     <properties>
-        <java.version>17.0.1</java.version>
+        <java.version>17</java.version>
         <app.image.name>spring-boot-fullstack</app.image.name>
         <app.image.tag/>
         <maven.compiler.source>1.8</maven.compiler.source>
@@ -158,16 +158,12 @@
                                 </configuration>
                             </execution>
                         </executions>
-
                     </plugin>
                     <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-resources-plugin</artifactId>
-                        <version>3.2.0</version>
-
                         <executions>
                             <execution>
-                                <id>copy-build-past</id>
+                                <id>copy-build-folder</id>
                                 <phase>process-classes</phase>
                                 <goals>
                                     <goal>copy-resources</goal>
@@ -177,17 +173,14 @@
                                         <resource>
                                             <directory>src/frontend/build</directory>
                                         </resource>
-
                                     </resources>
                                     <outputDirectory>${basedir}/target/classes/static</outputDirectory>
                                 </configuration>
                             </execution>
                         </executions>
                     </plugin>
-
                 </plugins>
             </build>
-
         </profile>
         <profile>
 

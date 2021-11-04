@@ -11,7 +11,7 @@ env:
   POSTGRESQL_DB: nidhallourimi
   POSTGRESQL_USER: postgres
   POSTGRESQL_PASSWORD: password
-  JAVA_VERSION: 1.17.0.1
+  JAVA_VERSION: 1.17
 
 jobs:
   build:
