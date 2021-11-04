@@ -7,3 +7,4 @@ services:
     restart: "always"
     environment:
       SPRING_PROFILES_ACTIVE: dev
+
