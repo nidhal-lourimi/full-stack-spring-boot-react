@@ -125,7 +125,7 @@
 
                         <configuration>
                             <nodeVersion>v12.16.1</nodeVersion>
-                            <npmVersion>6.14.4</npmVersion>
+                            <npmVersion>7.3.0</npmVersion>
                             <workingDirectory>src/frontend</workingDirectory>
                         </configuration>
                         <executions>
