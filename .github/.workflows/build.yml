@@ -1,4 +1,4 @@
-name: CII
+name:mvn  CI
 
 on:
   pull_request:
