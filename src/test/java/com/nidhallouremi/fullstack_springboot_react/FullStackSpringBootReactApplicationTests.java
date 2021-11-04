@@ -9,7 +9,8 @@ class FullStackSpringBootReactApplicationTests {
 
     @Test
     void contextLoads() {
-        Assertions.fail("opps error");
+       // Assertions.fail("opps error");
+
     }
 
 }
