@@ -138,17 +138,19 @@ a project file is output.
 """
 
 import gyp.common
-from functools import cmp_to_key
 import hashlib
-from operator import attrgetter
 import posixpath
 import re
 import struct
 import sys
 
+try:
+    basestring, cmp, unicode
+except NameError:  # Python 3
+    basestring = unicode = str
 
-def cmp(x, y):
-    return (x > y) - (x < y)
+    def cmp(x, y):
+        return (x > y) - (x < y)
 
 
 # See XCObject._EncodeString.  This pattern is used to determine when a string
@@ -197,7 +199,7 @@ def ConvertVariablesToShellSyntax(input_string):
     return re.sub(r"\$\((.*?)\)", "${\\1}", input_string)
 
 
-class XCObject:
+class XCObject(object):
     """The abstract base of all class types used in Xcode project files.
 
   Class variables:
@@ -299,8 +301,8 @@ class XCObject:
         try:
             name = self.Name()
         except NotImplementedError:
-            return f"<{self.__class__.__name__} at 0x{id(self):x}>"
-        return f"<{self.__class__.__name__} {name!r} at 0x{id(self):x}>"
+            return "<%s at 0x%x>" % (self.__class__.__name__, id(self))
+        return "<%s %r at 0x%x>" % (self.__class__.__name__, name, id(self))
 
     def Copy(self):
         """Make a copy of this object.
@@ -323,7 +325,7 @@ class XCObject:
                     that._properties[key] = new_value
                 else:
                     that._properties[key] = value
-            elif isinstance(value, (str, int)):
+            elif isinstance(value, (basestring, int)):
                 that._properties[key] = value
             elif isinstance(value, list):
                 if is_strong:
@@ -425,8 +427,6 @@ class XCObject:
       """
 
             hash.update(struct.pack(">i", len(data)))
-            if isinstance(data, str):
-                data = data.encode("utf-8")
             hash.update(data)
 
         if seed_hash is None:
@@ -616,7 +616,7 @@ class XCObject:
             comment = value.Comment()
         elif isinstance(value, str):
             printable += self._EncodeString(value)
-        elif isinstance(value, str):
+        elif isinstance(value, basestring):
             printable += self._EncodeString(value.encode("utf-8"))
         elif isinstance(value, int):
             printable += str(value)
@@ -791,7 +791,7 @@ class XCObject:
                     )
                 for item in value:
                     if not isinstance(item, property_type) and not (
-                        isinstance(item, str) and property_type == str
+                        isinstance(item, basestring) and property_type == str
                     ):
                         # Accept unicode where str is specified.  str is treated as
                         # UTF-8-encoded.
@@ -806,7 +806,7 @@ class XCObject:
                             + item.__class__.__name__
                         )
             elif not isinstance(value, property_type) and not (
-                isinstance(value, str) and property_type == str
+                isinstance(value, basestring) and property_type == str
             ):
                 # Accept unicode where str is specified.  str is treated as
                 # UTF-8-encoded.
@@ -827,7 +827,7 @@ class XCObject:
                         self._properties[property] = value.Copy()
                     else:
                         self._properties[property] = value
-                elif isinstance(value, (str, int)):
+                elif isinstance(value, (basestring, int)):
                     self._properties[property] = value
                 elif isinstance(value, list):
                     if is_strong:
@@ -1487,7 +1487,7 @@ class PBXGroup(XCHierarchicalElement):
 
     def SortGroup(self):
         self._properties["children"] = sorted(
-            self._properties["children"], key=cmp_to_key(lambda x, y: x.Compare(y))
+            self._properties["children"], cmp=lambda x, y: x.Compare(y)
         )
 
         # Recurse.
@@ -2185,7 +2185,7 @@ class PBXCopyFilesBuildPhase(XCBuildPhase):
             relative_path = path[1:]
         else:
             raise ValueError(
-                f"Can't use path {path} in a {self.__class__.__name__}"
+                "Can't use path %s in a %s" % (path, self.__class__.__name__)
             )
 
         self._properties["dstPath"] = relative_path
@@ -2250,8 +2250,8 @@ class PBXContainerItemProxy(XCObject):
 
     def __repr__(self):
         props = self._properties
-        name = "{}.gyp:{}".format(props["containerPortal"].Name(), props["remoteInfo"])
-        return f"<{self.__class__.__name__} {name!r} at 0x{id(self):x}>"
+        name = "%s.gyp:%s" % (props["containerPortal"].Name(), props["remoteInfo"])
+        return "<%s %r at 0x%x>" % (self.__class__.__name__, name, id(self))
 
     def Name(self):
         # Admittedly not the best name, but it's what Xcode uses.
@@ -2288,7 +2288,7 @@ class PBXTargetDependency(XCObject):
 
     def __repr__(self):
         name = self._properties.get("name") or self._properties["target"].Name()
-        return f"<{self.__class__.__name__} {name!r} at 0x{id(self):x}>"
+        return "<%s %r at 0x%x>" % (self.__class__.__name__, name, id(self))
 
     def Name(self):
         # Admittedly not the best name, but it's what Xcode uses.
@@ -2895,7 +2895,7 @@ class PBXProject(XCContainerPortal):
         # according to their defined order.
         self._properties["mainGroup"]._properties["children"] = sorted(
             self._properties["mainGroup"]._properties["children"],
-            key=cmp_to_key(lambda x, y: x.CompareRootGroup(y)),
+            cmp=lambda x, y: x.CompareRootGroup(y),
         )
 
         # Sort everything else by putting group before files, and going
@@ -2990,7 +2990,9 @@ class PBXProject(XCContainerPortal):
             # Xcode seems to sort this list case-insensitively
             self._properties["projectReferences"] = sorted(
                 self._properties["projectReferences"],
-                key=lambda x: x["ProjectRef"].Name().lower
+                cmp=lambda x, y: cmp(
+                    x["ProjectRef"].Name().lower(), y["ProjectRef"].Name().lower()
+                ),
             )
         else:
             # The link already exists.  Pull out the relevnt data.
@@ -3122,8 +3124,7 @@ class PBXProject(XCContainerPortal):
             product_group = ref_dict["ProductGroup"]
             product_group._properties["children"] = sorted(
                 product_group._properties["children"],
-                key=cmp_to_key(
-                    lambda x, y, rp=remote_products: CompareProducts(x, y, rp)),
+                cmp=lambda x, y, rp=remote_products: CompareProducts(x, y, rp),
             )
 
 
@@ -3158,7 +3159,7 @@ class XCProjectFile(XCObject):
         else:
             self._XCPrint(file, 0, "{\n")
         for property, value in sorted(
-            self._properties.items()
+            self._properties.items(), cmp=lambda x, y: cmp(x, y)
         ):
             if property == "objects":
                 self._PrintObjects(file)
@@ -3186,7 +3187,7 @@ class XCProjectFile(XCObject):
             self._XCPrint(file, 0, "\n")
             self._XCPrint(file, 0, "/* Begin " + class_name + " section */\n")
             for object in sorted(
-                objects_by_class[class_name], key=attrgetter("id")
+                objects_by_class[class_name], cmp=lambda x, y: cmp(x.id, y.id)
             ):
                 object.Print(file)
             self._XCPrint(file, 0, "/* End " + class_name + " section */\n")

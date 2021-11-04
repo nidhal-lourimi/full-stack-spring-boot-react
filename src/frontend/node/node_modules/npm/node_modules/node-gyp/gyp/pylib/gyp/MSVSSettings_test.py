@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 
 # Copyright (c) 2012 Google Inc. All rights reserved.
 # Use of this source code is governed by a BSD-style license that can be
@@ -9,7 +9,10 @@
 import unittest
 import gyp.MSVSSettings as MSVSSettings
 
-from io import StringIO
+try:
+    from StringIO import StringIO  # Python 2
+except ImportError:
+    from io import StringIO  # Python 3
 
 
 class TestSequenceFunctions(unittest.TestCase):

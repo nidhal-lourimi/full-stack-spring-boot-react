@@ -2,6 +2,7 @@
 # Use of this source code is governed by a BSD-style license that can be
 # found in the LICENSE file.
 
+from __future__ import print_function
 
 import filecmp
 import gyp.common
@@ -109,7 +110,7 @@ def CreateXCConfigurationList(configuration_names):
     return xccl
 
 
-class XcodeProject:
+class XcodeProject(object):
     def __init__(self, gyp_path, path, build_file_dict):
         self.gyp_path = gyp_path
         self.path = path
@@ -612,7 +613,7 @@ def PerformBuild(data, configurations, params):
     for config in configurations:
         arguments = ["xcodebuild", "-project", xcodeproj_path]
         arguments += ["-configuration", config]
-        print(f"Building [{config}]: {arguments}")
+        print("Building [%s]: %s" % (config, arguments))
         subprocess.check_call(arguments)
 
 
@@ -1071,7 +1072,7 @@ def GenerateOutput(target_list, target_dicts, data, params):
                 # TODO(mark): There's a possibility for collision here.  Consider
                 # target "t" rule "A_r" and target "t_A" rule "r".
                 makefile_name = "%s.make" % re.sub(
-                    "[^a-zA-Z0-9_]", "_", "{}_{}".format(target_name, rule["rule_name"])
+                    "[^a-zA-Z0-9_]", "_", "%s_%s" % (target_name, rule["rule_name"])
                 )
                 makefile_path = os.path.join(
                     xcode_projects[build_file].path, makefile_name
@@ -1101,7 +1102,7 @@ def GenerateOutput(target_list, target_dicts, data, params):
                         eol = ""
                     else:
                         eol = " \\"
-                    makefile.write(f"    {concrete_output}{eol}\n")
+                    makefile.write("    %s%s\n" % (concrete_output, eol))
 
                 for (rule_source, concrete_outputs, message, action) in zip(
                     rule["rule_sources"],
@@ -1122,7 +1123,7 @@ def GenerateOutput(target_list, target_dicts, data, params):
                             bol = ""
                         else:
                             bol = "    "
-                        makefile.write(f"{bol}{concrete_output} \\\n")
+                        makefile.write("%s%s \\\n" % (bol, concrete_output))
 
                         concrete_output_dir = posixpath.dirname(concrete_output)
                         if (
@@ -1142,7 +1143,7 @@ def GenerateOutput(target_list, target_dicts, data, params):
                             eol = ""
                         else:
                             eol = " \\"
-                        makefile.write(f"    {prerequisite}{eol}\n")
+                        makefile.write("    %s%s\n" % (prerequisite, eol))
 
                     # Make sure that output directories exist before executing the rule
                     # action.
