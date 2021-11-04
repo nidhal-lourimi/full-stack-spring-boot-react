@@ -1,4 +1,4 @@
-name: CI
+name: CII
 
 on:
   pull_request:
@@ -8,7 +8,7 @@ on:
 
 env:
   POSTGRESQL_VERSION: 13.1
-  POSTGRESQL_DB: nidhallourimi
+  POSTGRESQL_DB: amigoscode
   POSTGRESQL_USER: postgres
   POSTGRESQL_PASSWORD: password
   JAVA_VERSION: 1.17
@@ -33,4 +33,4 @@ jobs:
           java-version: ${{ env.JAVA_VERSION }}
       - name: Maven Clean Package
         run: |
-          mvn --no-transfer-progress clean package -P build-frontend
+           mvn --no-transfer-progress clean package -P build-frontend
