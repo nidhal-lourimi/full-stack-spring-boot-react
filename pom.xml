@@ -125,7 +125,7 @@
 
                         <configuration>
                             <nodeVersion>v4.6.0</nodeVersion>
-                            <npmVersion>2.15.9</npmVersion>
+                          <!--  <npmVersion>2.15.9</npmVersion>-->
                             <workingDirectory>src/frontend</workingDirectory>
                         </configuration>
                         <executions>
@@ -136,7 +136,6 @@
                                 </goals>
                                 <configuration>
                                     <nodeVersion>v15.4.0</nodeVersion>
-
                                     <npmVersion>7.3.0</npmVersion>
                                 </configuration>
                             </execution>
