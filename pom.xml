@@ -14,13 +14,9 @@
     <name>FullStack_SpringBoot_React</name>
     <description>FullStack_SpringBoot_React</description>
     <properties>
-        <java.version>16.0.1</java.version>
-        <app.image.name>spring-boot-fullstack</app.image.name>
+        <java.version>15</java.version>
+        <app.image.name>springboot-react-fullstack</app.image.name>
         <app.image.tag/>
-      <maven.compiler.source>3.2.0</maven.compiler.source>
-        <maven.compiler.target>3.2.0</maven.compiler.target>
-
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
     <dependencies>
         <dependency>
@@ -28,12 +24,6 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-devtools</artifactId>
-            <scope>runtime</scope>
-            <optional>true</optional>
-        </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
@@ -44,6 +34,7 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -54,6 +45,7 @@
             <artifactId>postgresql</artifactId>
             <scope>runtime</scope>
         </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-validation</artifactId>
@@ -65,7 +57,6 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>2.5.5</version>
                 <configuration>
                     <excludes>
                         <exclude>
@@ -76,17 +67,12 @@
                 </configuration>
             </plugin>
             <plugin>
-                <!-- mvn jib:dockerBuild -Dimage=fullstack:v1-->
                 <groupId>com.google.cloud.tools</groupId>
                 <artifactId>jib-maven-plugin</artifactId>
                 <version>2.5.2</version>
                 <configuration>
-                    <to>
-                        <!-- maven plugin to create and push img to docker hub cmd:  mvn clean install jib:build -->
-                        <image>nidhallourimi/${app.image.tag}:latest</image>
-                    </to>
                     <from>
-                        <image>openjdk:16.0.1</image>
+                        <image>openjdk:15</image>
                     </from>
                     <container>
                         <ports>
@@ -96,38 +82,128 @@
                     </container>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.6.2</version>
-                <configuration>
-                    <source>9</source>
-                    <target>9</target>
-                </configuration>
-            </plugin>
-
         </plugins>
     </build>
     <profiles>
+        <profile>
+            <id>jib-push-to-dockerhub</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.google.cloud.tools</groupId>
+                        <artifactId>jib-maven-plugin</artifactId>
+                        <version>2.5.2</version>
+                        <configuration>
+                            <from>
+                                <image>openjdk:15</image>
+                            </from>
+                            <container>
+                                <ports>
+                                    <port>8080</port>
+                                </ports>
+                                <format>OCI</format>
+                            </container>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>push-custom-tag</id>
+                                <phase>package</phase>
+                                <configuration>
+                                    <to>
+                                        <image>docker.io/nidhallourimi/${app.image.name}:${app.image.tag}</image>
+                                    </to>
+                                </configuration>
+                                <goals>
+                                    <goal>build</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>push-latest-tag</id>
+                                <phase>package</phase>
+                                <configuration>
+                                    <to>
+                                        <image>docker.io/nidhallourimi/${app.image.name}:latest</image>
+                                    </to>
+                                </configuration>
+                                <goals>
+                                    <goal>build</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>jib-push-to-local</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.google.cloud.tools</groupId>
+                        <artifactId>jib-maven-plugin</artifactId>
+                        <version>2.5.2</version>
+                        <configuration>
+                            <from>
+                                <image>openjdk:15</image>
+                            </from>
+                            <container>
+                                <ports>
+                                    <port>8080</port>
+                                </ports>
+                                <format>OCI</format>
+                            </container>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>push-custom-tag</id>
+                                <phase>package</phase>
+                                <configuration>
+                                    <to>
+                                        <image>nidhallourimi/${app.image.name}:${app.image.tag}</image>
+                                    </to>
+                                </configuration>
+                                <goals>
+                                    <goal>dockerBuild</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>push-latest-tag</id>
+                                <phase>package</phase>
+                                <configuration>
+                                    <to>
+                                        <image>nidhallourimi/${app.image.name}:latest</image>
+                                    </to>
+                                </configuration>
+                                <goals>
+                                    <goal>dockerBuild</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
         <profile>
             <id>build-frontend</id>
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
-
             <build>
                 <plugins>
                     <plugin>
                         <groupId>com.github.eirslett</groupId>
                         <artifactId>frontend-maven-plugin</artifactId>
                         <!-- Use the latest released version:
-                             https://repo1.maven.org/maven2/com/github/eirslett/frontend-maven-plugin/ -->
-                        <version>1.9.0</version>
-
+                        https://repo1.maven.org/maven2/com/github/eirslett/frontend-maven-plugin/ -->
+                        <version>1.11.2</version>
                         <configuration>
-
                             <nodeVersion>v4.6.0</nodeVersion>
-                          <!--  <npmVersion>2.15.9</npmVersion>-->
                             <workingDirectory>src/frontend</workingDirectory>
                         </configuration>
                         <executions>
@@ -139,7 +215,6 @@
                                 <configuration>
                                     <nodeVersion>v15.4.0</nodeVersion>
                                     <npmVersion>7.3.0</npmVersion>
-
                                 </configuration>
                             </execution>
                             <execution>
@@ -158,7 +233,6 @@
                                 </goals>
                                 <configuration>
                                     <arguments>run build</arguments>
-                                   <!-- <installDirectory>./src/frontend</installDirectory>-->
                                 </configuration>
                             </execution>
                         </executions>
@@ -177,118 +251,10 @@
                                         <resource>
                                             <directory>src/frontend/build</directory>
                                         </resource>
+
                                     </resources>
                                     <outputDirectory>${basedir}/target/classes/static</outputDirectory>
                                 </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
-
-            <!--mvn clean install -P build-frontend -P jib-push-to-docker -D app.image.tag=1
-    -->
-            <id>jib-push-to-docker</id>
-            <activation>
-                <activeByDefault>false</activeByDefault>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-
-                        <groupId>com.google.cloud.tools</groupId>
-                        <artifactId>jib-maven-plugin</artifactId>
-                        <version>2.5.0</version>
-                        <configuration>
-                            <from>
-                                <image>openjdk:16.0.1</image>
-                            </from>
-                            <container>
-                                <ports>
-                                    <port>8080</port>
-                                </ports>
-                                <format>OCI</format>
-                            </container>
-                        </configuration>
-                        <executions>
-                            <execution>
-                                <id>push-to-docker-hub-custom-tag</id>
-                                <configuration>
-                                    <to>
-                                        <image>nidhallourimi/${app.image.name}:${app.image.tag}</image>
-                                    </to>
-                                </configuration>
-                                <phase>package</phase>
-                                <goals>
-                                    <goal>build</goal>
-                                </goals>
-                            </execution>
-                            <execution>
-                                <id>push-to-docker-hub-latest-tag</id>
-                                <configuration>
-                                    <to>
-                                        <image>nidhallourimi/${app.image.name}:latest</image>
-                                    </to>
-                                </configuration>
-                                <phase>package</phase>
-                                <goals>
-                                    <goal>build</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
-            <id>jib-push-to-local</id>
-            <activation>
-                <activeByDefault>false</activeByDefault>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-
-                        <groupId>com.google.cloud.tools</groupId>
-                        <artifactId>jib-maven-plugin</artifactId>
-                        <version>2.5.0</version>
-                        <configuration>
-                            <from>
-                                <image>openjdk:16.0.1</image>
-                            </from>
-                            <container>
-                                <ports>
-                                    <port>8080</port>
-                                </ports>
-                                <format>OCI</format>
-                            </container>
-                        </configuration>
-                        <executions>
-                            <execution>
-                                <id>push-to-local-custom-tag</id>
-                                <configuration>
-                                    <to>
-                                        <image>nidhallourimi/${app.image.name}:${app.image.tag}</image>
-                                    </to>
-                                </configuration>
-                                <phase>package</phase>
-                                <goals>
-                                    <goal>dockerBuild</goal>
-                                </goals>
-                            </execution>
-                            <execution>
-                                <id>push-to-local-latest-tag</id>
-                                <configuration>
-                                    <to>
-                                        <image>nidhallourimi/${app.image.name}:latest</image>
-                                    </to>
-                                </configuration>
-                                <phase>package</phase>
-                                <goals>
-                                    <goal>dockerBuild</goal>
-                                </goals>
                             </execution>
                         </executions>
                     </plugin>
