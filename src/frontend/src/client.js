@@ -1,5 +1,6 @@
 import fetch from 'unfetch'
-
+import React from 'react';
+import ReactDOM from 'react-dom';
 const checkStatus = response => {
     if (response.ok) {
         return response

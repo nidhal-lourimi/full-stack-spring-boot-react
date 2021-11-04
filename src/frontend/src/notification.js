@@ -1,5 +1,6 @@
 import {notification} from "antd";
-
+import React from 'react';
+import ReactDOM from 'react-dom';
 
 const openNotificationWithIcon = (type,msg,description,placement) => {
     placement= placement || "topRight"

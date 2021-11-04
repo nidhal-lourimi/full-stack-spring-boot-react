@@ -124,7 +124,7 @@
                         <version>1.9.0</version>
 
                         <configuration>
-                            <nodeVersion>v12.16.1</nodeVersion>
+                            <nodeVersion>v16.11.1</nodeVersion>
                             <workingDirectory>src/frontend</workingDirectory>
                         </configuration>
                         <executions>
@@ -134,7 +134,7 @@
                                     <goal>install-node-and-npm</goal>
                                 </goals>
                                 <configuration>
-                                    <!--    <nodeVersion>v16.11.1</nodeVersion>
+                                     <!-- <nodeVersion>v16.11.1</nodeVersion>
                                         <npmVersion>8.0.0</npmVersion>-->
                                 </configuration>
                             </execution>

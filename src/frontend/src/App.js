@@ -1,4 +1,6 @@
 //import {Button,Radio} from "antd";
+import React from 'react';
+import ReactDOM from 'react-dom';
 import {useState, useEffect} from "react";
 import {deleteStudent, getAllStudents} from "./client";
 import {Layout, Menu, Breadcrumb, Table, Empty, Button, Badge, Tag, Popconfirm,message,Image,Spin} from 'antd';

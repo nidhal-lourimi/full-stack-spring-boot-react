@@ -3,6 +3,8 @@ import {addNewStudent} from "./client";
 import {LoadingOutlined, SmileOutlined} from "@ant-design/icons";
 import {useState} from "react";
 import {successNotification,errorNotification} from "./notification";
+import React from 'react';
+import ReactDOM from 'react-dom';
 
 const {Option} = Select;
 const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
