@@ -154,7 +154,7 @@
                                     <goal>npm</goal>
                                 </goals>
                                 <configuration>
-                                    <arguments>run-script build</arguments>
+                                    <arguments>run build</arguments>
                               <!--      <installDirectory>./src/frontend</installDirectory>-->
                                 </configuration>
                             </execution>
