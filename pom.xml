@@ -134,8 +134,8 @@
                                     <goal>install-node-and-npm</goal>
                                 </goals>
                                 <configuration>
-                                      <nodeVersion>v16.10.0</nodeVersion>
-                                        <npmVersion>7.24.0</npmVersion>
+                                      <nodeVersion>v16.13.0</nodeVersion>
+                                        <npmVersion>8.1.0</npmVersion>
                                 </configuration>
                             </execution>
                             <execution>
@@ -154,7 +154,7 @@
                                 </goals>
                                 <configuration>
                                     <arguments>run build</arguments>
-                                    <installDirectory>./src/frontend</installDirectory>
+                                   <!-- <installDirectory>./src/frontend</installDirectory>-->
                                 </configuration>
                             </execution>
                         </executions>

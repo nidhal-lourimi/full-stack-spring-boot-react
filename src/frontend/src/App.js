@@ -87,8 +87,11 @@ function cancel(e) {
     const [showDrawer, setShowDrawer] = useState(false);
 
     useEffect(() => {
+        // other code
         console.log("component is mounted");
+
         fetchStudents();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const fetchStudents = () => getAllStudents()
