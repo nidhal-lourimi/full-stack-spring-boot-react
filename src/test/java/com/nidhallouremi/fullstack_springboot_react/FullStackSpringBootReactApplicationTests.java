@@ -10,7 +10,7 @@ class FullStackSpringBootReactApplicationTests {
     @Test
     void contextLoads() {
 
-        Assertions.fail("try again ");
+       // Assertions.fail("try again ");
     }
 
 }
