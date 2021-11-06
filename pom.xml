@@ -85,7 +85,7 @@
                         <image>nidhallourimi/${app.image.tag}:latest</image>
                     </to>
                     <from>
-                        <image>openjdk:17</image>
+                        <image>openjdk:16</image>
                     </from>
                     <container>
                         <ports>
@@ -206,7 +206,7 @@
                         <version>2.5.0</version>
                         <configuration>
                             <from>
-                                <image>openjdk:17</image>
+                                <image>openjdk:16</image>
                             </from>
                             <container>
                                 <ports>
@@ -259,7 +259,7 @@
                         <version>2.5.0</version>
                         <configuration>
                             <from>
-                                <image>openjdk:17</image>
+                                <image>openjdk:16</image>
                             </from>
                             <container>
                                 <ports>
