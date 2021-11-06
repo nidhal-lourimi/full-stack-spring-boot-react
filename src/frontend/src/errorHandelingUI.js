@@ -1,4 +1,4 @@
-import { Result, Button } from 'antd';
+import { Result } from 'antd';
 
 
 export const errorUI = (msg) => {
