@@ -1,7 +1,21 @@
 //import {Button,Radio} from "antd";
 import {useState, useEffect} from "react";
 import {deleteStudent, getAllStudents} from "./client";
-import {Layout, Menu, Breadcrumb, Table, Empty, Button, Badge, Tag, Popconfirm,message,Image,Spin} from 'antd';
+import {
+    Layout,
+    Menu,
+    Breadcrumb,
+    Table,
+    Empty,
+    Button,
+    Badge,
+    Tag,
+    Popconfirm,
+    message,
+    Image,
+    Spin,
+    Divider
+} from 'antd';
 import {
     DesktopOutlined,
     PieChartOutlined,
@@ -204,6 +218,9 @@ function cancel(e) {
             </Content>
             <Footer style={{textAlign: 'center'}}>
                 <Image width={75} src="https://user-images.githubusercontent.com/52574003/139816738-7d56a8bf-307c-487f-89b6-8416665c4c32.png" />
+                <Divider>
+                    <a rel="noreferrer" target="_blank" href="https://www.billcom-consulting.com/">click here for support</a>
+                </Divider>
             </Footer>
         </Layout>
     </Layout>
