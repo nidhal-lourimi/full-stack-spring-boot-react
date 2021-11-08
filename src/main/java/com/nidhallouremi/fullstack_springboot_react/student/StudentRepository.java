@@ -14,11 +14,12 @@ public interface StudentRepository extends JpaRepository<Student,Long> {
 
     Optional<Student> getStudentById(Long id) ;
 
-/*    @Query("" +
+    @Query("" +
             "SELECT CASE WHEN COUNT(s) > 0 THEN " +
             "TRUE ELSE FALSE END " +
             "FROM Student s " +
             "WHERE s.email = ?1"
-    )*/
-    Optional<Student> findStudentsByEmail(String email);
+    )
+    boolean selectExistEmail(String mail);
+    //Optional<Student> findStudentsByEmail(String email);
 }

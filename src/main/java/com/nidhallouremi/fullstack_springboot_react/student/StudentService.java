@@ -25,9 +25,9 @@ public class StudentService {
     }
 
     public void addStudent(Student student) {
-        Optional<Student> studentOptional = studentRepository.findStudentsByEmail(student.getEmail());
-        if (studentOptional.isPresent()) {
-            throw new BadRequestException(String.format("email '[%s]' is taken", student.getEmail()));
+        boolean studentExist = studentRepository.selectExistEmail(student.getEmail());
+        if (studentExist) {
+            throw new BadRequestException(String.format("email %s is taken", student.getEmail()));
         } else {
             studentRepository.save(student);
         }
@@ -36,11 +36,13 @@ public class StudentService {
 
 
     public void deleteStudent(Long id)  {
-        if (studentRepository.getStudentById(id).isPresent()){
+        boolean exist =(studentRepository.getStudentById(id)).isPresent();
+        if (exist){
             studentRepository.deleteById(id);
+
         }
         else{
-            throw new StudentNotFoundException("student with id "+id+ "was not found");
+            throw new StudentNotFoundException("student with id "+id+ " was not found");
 
         }
 
