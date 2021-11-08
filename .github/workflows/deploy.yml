@@ -74,6 +74,10 @@ jobs:
           text: ':white_check_mark: pushed nidhallourimi/spring-boot-fullstack:${{steps.build-number.outputs.BUILD_NUMBER}} to docker hub... https://hub.docker.com/repository/docker/nidhallourimi/spring-boot-fullstack'
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+         - name: Coveralls GitHub Action
+              uses: coverallsapp/github-action@1.1.3
+
       - name: Update and commit app version in docker-compose.yaml
         run: |
           BUILD_NUMBER=${{steps.build-number.outputs.BUILD_NUMBER}}
@@ -85,6 +89,9 @@ jobs:
           git add elasticbeanstalk/docker-compose.yml
           git commit -m "new app version: ${BUILD_NUMBER}"
           git push
+
+
+
 
 #      - uses: 8398a7/action-slack@v3
 #        with:
