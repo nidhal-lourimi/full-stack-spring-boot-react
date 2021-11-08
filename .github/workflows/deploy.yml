@@ -61,6 +61,10 @@ jobs:
           username: ${{ env.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_PASSWORD }}
 
+      - name: Coveralls GitHub Action
+        uses: coverallsapp/github-action@1.1.3
+
+
       - name: Maven Clean Package and Push to Dockerhub
         run: |
           mvn --no-transfer-progress clean package \
@@ -75,8 +79,7 @@ jobs:
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
-         - name: Coveralls GitHub Action
-              uses: coverallsapp/github-action@1.1.3
+
 
       - name: Update and commit app version in docker-compose.yaml
         run: |
@@ -120,3 +123,4 @@ jobs:
 #        env:
 #          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 #        if: always()
+
