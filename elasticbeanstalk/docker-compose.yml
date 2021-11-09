@@ -1,7 +1,7 @@
 version: "3.9"
 services:
   backend:
-    image: "nidhallourimi/spring-boot-fullstack:9.11.2021.14.57.22"
+    image: "nidhallourimi/spring-boot-fullstack:9.11.2021.15.18.13"
     ports:
       - "80:8080"
     restart: "always"
